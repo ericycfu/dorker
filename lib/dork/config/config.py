@@ -1,7 +1,15 @@
 import yaml
 import os
 
+from dork.config.handlers import database_handler
+
 CONFIGS = ['databases',]
+HANDLERS = {
+    'databases': database_handler.handle
+}
+
+API_KEY = "YOUR_KEY_HERE"
+
 def load_configs():
     config_dir = os.path.join(os.getcwd(), 'dork/config')
     configs = {}
@@ -14,3 +22,9 @@ def load_configs():
 
 def get_configs():
     return CONFIGS
+
+def get_handlers():
+    return HANDLERS
+
+def get_api_key():
+    return API_KEY
