@@ -1,0 +1,19 @@
+Items:
+  - Name: PostgreSQL
+    Query: "port:5432 PostgreSQL"
+  - Name: MySQL
+    Query: "product:MySQL"
+  - Name: MongoDB
+    Query: "product:MongoDB"
+  - Name: Riak
+    Query: "port:8087 Riak"
+  - Name: ElasticSearch
+    Query: "port:9200 json"
+  - Name: Redis
+    Query: "product:Redis"
+  - Name: Memcached
+    Query: "product:Memcached"
+  - Name: Cassandra
+    Query: "product:Cassandra"
+  - Name: CouchDB
+    Query: "product:CouchDB"
