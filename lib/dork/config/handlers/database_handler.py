@@ -1,15 +1,30 @@
-INDENT_FMT = "      {}"
+import os
+
+HTML_FMT = """<html>
+{}
+</html>
+"""
+data = ['hostnames', 'info', 'data', 'version']
 def handle(output):
+    path = "outputs/{}".format(output['path'])
+
+    if not os.path.exists(path):
+        os.makedirs(path)
+
     for match in output['matches']:
-        print(" Entry: {}:{}".format(match['ip_str'], match['port']))
-        printif('hostnames', match)
-        printif('info', match)
-        printif('data', match)
-        printif('version', match)
+        filename = "{}-{}-{}.html".format(match['_shodan']['id'], match['ip_str'], match['port'])
+        full_path = os.path.join(path, filename)
+        if os.path.exists(full_path):
+            continue
+        f = open(full_path, 'w')
+        to_write = "Entry: {}:{}<br>".format(match['ip_str'], match['port'])
+        for item in data:
+            to_write += printif(item, match)
+        f.write(HTML_FMT.format(to_write))
+        f.close()
 
 def printif(key, json):
     if key in json:
-        fmt_print("{}: {}".format(key.upper(), json[key]))
-
-def fmt_print(str):
-    print(INDENT_FMT.format(str))
+        return "{}: {}<br>".format(key.upper(), json[key])
+    else:
+        return ''

@@ -1,0 +1,9 @@
+Items:
+  - Name: Jenkins
+    Query: "x-jenkins"
+  - Name: DefaultPassword
+    Query: "default password"
+  - Name: Internal
+    Query: "hostname:internal"
+  - Name: RDP
+    Query: "port:3389"

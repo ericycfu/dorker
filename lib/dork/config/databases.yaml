@@ -5,6 +5,8 @@ Items:
     Query: "product:MySQL"
   - Name: MongoDB
     Query: "product:MongoDB"
+  - Name: MongoDB
+    Query: "port:27017"
   - Name: Riak
     Query: "port:8087 Riak"
   - Name: ElasticSearch

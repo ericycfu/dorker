@@ -3,15 +3,16 @@ import os
 
 from dork.config.handlers import database_handler
 
-CONFIGS = ['databases',]
+CONFIGS = ['databases', 'misc']
 HANDLERS = {
-    'databases': database_handler.handle
+    'databases': database_handler.handle,
+    'misc': database_handler.handle,
 }
 
-API_KEY = "YOUR_KEY_HERE"
+API_KEY = ""
 
 def load_configs():
-    config_dir = os.path.join(os.getcwd(), 'dork/config')
+    config_dir = os.path.join(os.getcwd(), 'lib/dork/config')
     configs = {}
     for config in CONFIGS:
         config_path = os.path.join(config_dir, "{}.yaml".format(config))

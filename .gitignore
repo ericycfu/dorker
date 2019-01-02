@@ -1,2 +1,5 @@
 *.pyc
 __pycache__/
+targets.yaml
+test.yaml
+outputs/
