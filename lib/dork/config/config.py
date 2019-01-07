@@ -3,29 +3,28 @@ import os
 
 from dork.config.handlers import database_handler
 
-CONFIGS = ['databases', 'misc']
-HANDLERS = {
-    'databases': database_handler.handle,
-    'misc': database_handler.handle,
-}
+class DorkerConfiguration(object):
+    def __init__(self):
+        self.config_hash = self.load_config()
+        self.API_KEYS = self.config_hash['API_KEYS']
+        self.CONFIGS = ['databases', 'misc']
 
-API_KEYS = []
+        self.SOURCES = self.load_sources()
 
-def load_configs():
-    config_dir = os.path.join(os.getcwd(), 'lib/dork/config')
-    configs = {}
-    for config in CONFIGS:
-        config_path = os.path.join(config_dir, "{}.yaml".format(config))
-        stream = open(config_path, 'r')
-        yaml_data = yaml.load(stream)
-        configs[config] = yaml_data['Items']
-    return configs
+        self.HANDLERS = {
+            'databases': database_handler.handle,
+            'misc': database_handler.handle,
+        }
 
-def get_configs():
-    return CONFIGS
+    def load_sources(self):
+        config_dir = os.path.join(os.getcwd(), 'lib/dork/config')
+        configs = {}
+        for config in self.CONFIGS:
+            config_path = os.path.join(config_dir, "{}.yaml".format(config))
+            stream = open(config_path, 'r')
+            yaml_data = yaml.load(stream)
+            configs[config] = yaml_data['Items']
+        return configs
 
-def get_handlers():
-    return HANDLERS
-
-def get_api_keys():
-    return API_KEYS
+    def load_config(self):
+        return yaml.load(open('config.yaml'))

@@ -5,7 +5,7 @@ import time
 
 from shodan import Shodan
 
-from dork.config.config import load_configs, get_configs, get_handlers, get_api_keys
+from dork.config.config import DorkerConfiguration
 from dork.persist import Persistence
 
 PAYLOADS = {
@@ -54,15 +54,17 @@ class RequestEngine(object):
 
 class DorkEngine(object):
     def __init__(self):
-        self.request_engine = RequestEngine(get_api_keys())
+        self.configuration = DorkerConfiguration()
+        self.config_payloads = self.configuration.SOURCES
+        self.handlers = self.configuration.HANDLERS
+
+        self.request_engine = RequestEngine(self.configuration.API_KEYS)
         self.persistent_store = Persistence()
-        self.config_payloads = load_configs()
-        self.handlers = get_handlers()
 
         self.to_notify = []
 
     def dork_target(self, target, payload_type, org=None):
-        for config in get_configs():
+        for config in self.configuration.CONFIGS:
             payloads = self.config_payloads[config]
             for payload in payloads:
                 id = target
