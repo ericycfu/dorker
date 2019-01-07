@@ -5,7 +5,8 @@ import time
 
 from shodan import Shodan
 
-from dork.config.config import load_configs, get_configs, get_handlers, get_api_key
+from dork.config.config import load_configs, get_configs, get_handlers, get_api_keys
+from dork.persist import Persistence
 
 PAYLOADS = {
     'url': "hostname:{} {}",
@@ -13,18 +14,15 @@ PAYLOADS = {
 }
 
 class RequestEngine(object):
-    def __init__(self, num_threads, api_key):
-        self.num_threads = num_threads
+    def __init__(self, api_keys):
         self.back_queue = queue.Queue()
         self.front_queue = queue.Queue()
         self.total_queued = 0
 
-        self.api_key = api_key
-
         self.workers = []
 
-        for _ in range(self.num_threads):
-            t = threading.Thread(target=self.process_input, args=(Shodan(self.api_key),))
+        for key in api_keys:
+            t = threading.Thread(target=self.process_input, args=(Shodan(key),))
             t.start()
             self.workers.append(t)
 
@@ -56,9 +54,12 @@ class RequestEngine(object):
 
 class DorkEngine(object):
     def __init__(self):
-        self.request_engine = RequestEngine(1, get_api_key())
+        self.request_engine = RequestEngine(get_api_keys())
+        self.persistent_store = Persistence()
         self.config_payloads = load_configs()
         self.handlers = get_handlers()
+
+        self.to_notify = []
 
     def dork_target(self, target, payload_type, org=None):
         for config in get_configs():
@@ -74,6 +75,10 @@ class DorkEngine(object):
             print(self.request_engine.total_queued)
             self.process_output(self.request_engine.dequeue_output())
         self.request_engine.cleanup()
+        self.persistent_store.cleanup()
+
+        for item in self.to_notify:
+            print(item)
 
     def process_output(self, args):
         name, output = args
@@ -81,4 +86,5 @@ class DorkEngine(object):
         if output['total'] != 0:
             type = name.split('/')[-2]
             output['path'] = name
-            self.handlers[type](output)
+            to_notify = self.handlers[type](output, self.persistent_store)
+            self.to_notify.append(to_notify)

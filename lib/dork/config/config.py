@@ -9,7 +9,7 @@ HANDLERS = {
     'misc': database_handler.handle,
 }
 
-API_KEY = ""
+API_KEYS = []
 
 def load_configs():
     config_dir = os.path.join(os.getcwd(), 'lib/dork/config')
@@ -27,5 +27,5 @@ def get_configs():
 def get_handlers():
     return HANDLERS
 
-def get_api_key():
-    return API_KEY
+def get_api_keys():
+    return API_KEYS
