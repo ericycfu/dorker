@@ -3,4 +3,5 @@ __pycache__/
 targets.yaml
 test.yaml
 outputs/
-lib/dork/config/misc.yaml
+config.yaml
+output.shelf
